@@ -22,10 +22,6 @@ def divide(a, b):
     else:
         result = a / b
         logging.info(f"Dzielę liczbę {a} przez {b}. Wynik {result}")
-
-def wrong_task():
-    logging.warning("Wybierz poprawne działanie")
-    sys.exit()
     
 def init_app():
     task = int(input("Podaj działanie, posługując się odpowiednią liczbą: 1 Dodawanie, 2 Odejmowanie, 3 Mnożenie, 4 Dzielenie: "))
