@@ -52,7 +52,7 @@ def init_app():
         return task, a,b
     elif task == 0:
         print("Przeprowadzam teraz test kalkulatora: ")
-        return task, None  # tutaj jeszcze nie wiem dlaczego, ale test się wywala jeżeli nie dodam "None"
+        return task, None
     else:
         print("Niepoprawna wartość. Spróbuj jeszcze raz")
         sys.exit()
