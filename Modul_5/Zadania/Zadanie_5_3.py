@@ -62,8 +62,14 @@ base_contacts = create_contact(5, "BaseContact")
 print("-----Kontakty podstawowe-----")
 for contact in base_contacts:
     print(contact)
+    print(contact.name_length)
+    contact.contact()
+    print("-----")
     
 business_contacts = create_contact(5, "BusinessContact")
 print("\n-----Kontakty biznesowe-----")
 for contact in business_contacts:
     print(contact)
+    print(contact.name_length)
+    contact.contact()
+    print("-----")
