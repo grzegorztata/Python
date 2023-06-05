@@ -17,4 +17,5 @@ print('----- Wyświetlanie indeksów posortowanych wartości -----')
 arr = np.random.randint(1,40,10)
 print(arr)
 display_sorted_index = np.argsort(arr)
-print(display_sorted_index)  # do dopytania na sporkaniu
+print(display_sorted_index)  # do dopytania na spotkaniu
+
