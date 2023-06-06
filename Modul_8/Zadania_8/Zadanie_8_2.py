@@ -1,5 +1,4 @@
 import pandas as pd
-import xlsxwriter
 
 data = pd.read_html('https://www.officialcharts.com/chart-news/the-best-selling-albums-of-all-time-on-the-official-uk-chart__15551/', header=0)
 df = data[0]
