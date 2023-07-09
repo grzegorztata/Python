@@ -2,10 +2,13 @@ from dash import html
 from dash import dcc
 import plotly.graph_objects as go
 
-# Sprzedaż globalna
+# Sprzedaż globalna (tab1)
 
 def render_tab(df):
 
+    # DatePickerRange jest widgetem dcc
+    # Nadajemy widgetowi unikalne id, datę początkową, datę końcową oraz format daty
+    # Na końcu tworzymy html.Div, w którym dodamy 2 wykresy umieszczone obok siebie
     layout = html.Div([html.H1('Sprzedaż globalna',style={'text-align':'center'}),
                         html.Div([dcc.DatePickerRange(id='sales-range',
                         start_date=df['tran_date'].min(),

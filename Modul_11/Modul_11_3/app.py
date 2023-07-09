@@ -9,6 +9,7 @@ from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 import tab1
 import tab2
+import tab3
 
 cc_path = os.path.abspath('KursPython/Modul_11/Modul_11_3/db/country_codes.csv')
 customers_path = os.path.abspath('KursPython/Modul_11/Modul_11_3/db/customers.csv')
@@ -40,7 +41,8 @@ class db:
         self.customers = pd.read_csv(customers_path, index_col=0)
         self.prod_info = pd.read_csv(prod_info_path)
 
-    def merge(self):
+    def merge(self):  
+
         df = self.transactions.join(self.prod_info.drop_duplicates(subset=['prod_cat_code'])
                                     .set_index('prod_cat_code')['prod_cat'], on='prod_cat_code', how='left')
 
@@ -59,13 +61,15 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 USERNAME_PASSWORD = [['user','pass']]
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
 
 auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD)
 
+
 app.layout = html.Div([html.Div([dcc.Tabs(id='tabs', value='tab-1', children=[
     dcc.Tab(label='Sprzedaż globalna', value='tab-1'),
-    dcc.Tab(label='Produkty', value='tab-2')
+    dcc.Tab(label='Produkty', value='tab-2'),
+    dcc.Tab(label='Kanały Sprzedaży', value='tab-3')
 ]),
     html.Div(id='tabs-content')
 ], style={'width': '80%', 'margin': 'auto'})],
@@ -82,7 +86,8 @@ def render_content(tab):
         return tab1.render_tab(df.merged)
     elif tab == 'tab-2':
         return tab2.render_tab(df.merged)
-
+    elif tab == 'tab-3':
+        return tab3.render_tab(df.merged)
 
 ## tab1 callbacks
 @app.callback(Output('bar-sales', 'figure'),
@@ -131,6 +136,21 @@ def tab2_barh_prod_subcat(chosen_cat):
 
     data = traces
     fig = go.Figure(data=data,layout=go.Layout(barmode='stack',margin={'t':20,}))
+    return fig
+
+## tab3 callback
+@app.callback(Output('bar-sales-store-type', 'figure'), [Input('sales-range', 'start_date'), Input('sales-range', 'end_date')])
+def tab3_bar_sales_store_type(start_date, end_date):
+    truncated = df.merged[(df.merged['tran_date'] >= start_date) & (df.merged['tran_date'] <= end_date)]
+    grouped = truncated.groupby(['Store_type', truncated['tran_date'].dt.day_name()])['total_amt'].sum().reset_index()
+
+    bar_data = []
+    for store_type in grouped['Store_type'].unique():
+        store_data = grouped[grouped['Store_type'] == store_type]
+        bar_data.append(go.Bar(x=store_data['tran_date'], y=store_data['total_amt'], name=store_type))
+
+    fig = go.Figure(data=bar_data, layout=go.Layout(title='Sprzedaż według kanałów sprzedaży'))
+
     return fig
 
 # Uruchamiamy serwer
